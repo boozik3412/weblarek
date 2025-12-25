@@ -1,4 +1,4 @@
-import { IProduct } from '../../types';
+import { IProduct } from "../../types";
 
 export class Products {
   private _items: IProduct[] = [];
@@ -13,7 +13,7 @@ export class Products {
   }
 
   getItem(id: string): IProduct | undefined {
-    return this._items.find(item => item.id === id);
+    return this._items.find((item) => item.id === id);
   }
 
   setPreview(product: IProduct): void {

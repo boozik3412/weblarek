@@ -1,14 +1,14 @@
-import { IProduct, IOrder, IBuyer } from '../../types/index';
+import { IProduct, IOrder, IBuyer } from "../../types/index";
 
 export class Order implements IOrder {
-  id: string = '';
+  id: string = "";
   items: IProduct[] = [];
   total: number = 0;
-  paymentMethod: string = '';
-  address: string = '';
-  phone: string = '';
-  email: string = '';
-  status: string = '';
+  paymentMethod: string = "";
+  address: string = "";
+  phone: string = "";
+  email: string = "";
+  status: string = "";
 
   constructor(buyer: IBuyer, items: IProduct[], total: number) {
     this.items = items;
@@ -46,7 +46,7 @@ export class Order implements IOrder {
     return {
       phone: this.phone,
       email: this.email,
-      address: this.address
+      address: this.address,
     };
   }
 }

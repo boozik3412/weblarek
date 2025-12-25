@@ -1,4 +1,4 @@
-import { IProduct } from '../../types/index';
+import { IProduct } from "../../types/index";
 
 export class Basket {
   private _items: IProduct[] = [];
@@ -8,7 +8,7 @@ export class Basket {
   }
 
   addItem(item: IProduct): void {
-    const existingItem = this._items.find(i => i.id === item.id);
+    const existingItem = this._items.find((i) => i.id === item.id);
     if (existingItem) {
       existingItem.quantity = (existingItem.quantity || 0) + 1;
     } else {
@@ -17,7 +17,7 @@ export class Basket {
   }
 
   removeItem(itemId: string): void {
-    this._items = this._items.filter(item => item.id !== itemId);
+    this._items = this._items.filter((item) => item.id !== itemId);
   }
 
   clear(): void {
@@ -25,7 +25,10 @@ export class Basket {
   }
 
   getTotal(): number {
-    return this._items.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
+    return this._items.reduce(
+      (sum, item) => sum + item.price * (item.quantity || 1),
+      0
+    );
   }
 
   getCount(): number {
@@ -33,6 +36,6 @@ export class Basket {
   }
 
   hasItem(itemId: string): boolean {
-    return this._items.some(item => item.id === itemId);
+    return this._items.some((item) => item.id === itemId);
   }
 }
