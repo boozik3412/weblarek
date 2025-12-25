@@ -8,13 +8,11 @@ export class Basket {
   }
 
   addItem(item: IProduct): void {
-    const existingItem = this._items.find((i) => i.id === item.id);
-    if (existingItem) {
-      existingItem.quantity = (existingItem.quantity || 0) + 1;
-    } else {
-      this._items.push({ ...item, quantity: 1 });
+    if (!this.hasItem(item.id)) {
+      this._items.push(item);
     }
   }
+  
 
   removeItem(itemId: string): void {
     this._items = this._items.filter((item) => item.id !== itemId);

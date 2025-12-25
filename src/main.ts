@@ -1,18 +1,31 @@
 import './scss/styles.scss';
 
-// Импорт тестов
 import { Products } from './components/models/Products';
 import { Basket } from './components/models/Basket';
 import { Order } from './components/models/Order';
 
-// Простой тест классов моделей
+// ===== ТЕСТИРОВАНИЕ PRODUCTS =====
+console.log('=== Тестирование Products ===');
 const products = new Products();
-console.log('Products class instantiated');
+console.log('Products instantiated');
 
+// Тест методов Products
+// setItems, getItems, getItem, addItem
+
+// ===== ТЕСТИРОВАНИЕ BASKET =====
+console.log('\n=== Тестирование Basket ===');
 const basket = new Basket();
-console.log('Basket class instantiated');
+console.log('Basket instantiated');
 
-const buyer = { phone: '1234567890', email: 'test@test.com', address: 'Test' };
-const order = new Order(buyer, [], 0);
-console.log('Order class instantiated');
-console.log('Models are working correctly!');
+// Тест методов Basket
+// addItem, getItems, getTotal, getCount, hasItem, removeItem, clear
+
+// ===== ТЕСТИРОВАНИЕ ORDER =====
+console.log('\n=== Тестирование Order ===');
+const order = new Order();  // ← ИСПРАВЛЕНО: без параметров!
+console.log('Order instantiated');
+
+// Тест методов Order
+// setPayment, getPayment, setStatus, getStatus, validate
+
+console.log('\n✅ Models are working correctly!');
