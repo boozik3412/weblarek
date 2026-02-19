@@ -9,13 +9,13 @@ import { Order } from "./components/models/Order";
 
 import { Page } from "./components/views/Page";
 import { Modal } from "./components/views/Modal";
-import { CardCatalog, CardPreview, CardBasket, ICardBasket } from "./components/views/Card";
+import { CardCatalog, CardPreview, CardBasket } from "./components/views/Card";
 import { BasketView } from "./components/views/BasketView";
 import { OrderForm, ContactsForm } from "./components/views/Form";
 import { Success } from "./components/views/Success";
 
 import { API_URL, CDN_URL } from "./utils/constants";
-import { IProduct } from "./types";
+import { IProduct, ICardBasket } from "./types";
 
 // ---- Инициализация ----
 const events = new EventEmitter();
