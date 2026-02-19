@@ -43,3 +43,15 @@ export interface IProductsResponse {
 export interface IFormErrors {
   [key: string]: string;
 }
+
+// Интерфейс для карточки превью
+export interface ICardPreview extends IProduct {
+  description: string;
+}
+
+// Интерфейс для карточки в корзине
+export interface ICardBasket {
+  title: string;
+  price: number | null;
+  index: number;
+}

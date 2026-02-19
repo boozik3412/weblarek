@@ -1,5 +1,5 @@
 import { Component } from "../base/Component";
-import { IProduct } from "../../types";
+import { IProduct, ICardPreview, ICardBasket } from "../../types";
 import { categoryMap } from "../../utils/constants";
 
 // Базовый класс карточки — дженерик с дефолтным типом IProduct
@@ -55,10 +55,6 @@ export class CardCatalog extends Card {
 }
 
 // Карточка для превью (полная карточка с кнопкой)
-export interface ICardPreview extends IProduct {
-  description: string;
-}
-
 export class CardPreview extends Card<ICardPreview> {
   protected _button: HTMLButtonElement;
   protected _text: HTMLElement;
@@ -94,12 +90,6 @@ export class CardPreview extends Card<ICardPreview> {
 }
 
 // Карточка для корзины (компактная, со счётчиком)
-export interface ICardBasket {
-  title: string;
-  price: number | null;
-  index: number;
-}
-
 export class CardBasket extends Card<ICardBasket> {
   protected _index: HTMLElement;
   protected _deleteButton: HTMLButtonElement;
