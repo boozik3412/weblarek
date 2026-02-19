@@ -12,10 +12,10 @@ export class Card extends Component<IProduct> {
 
   constructor(container: HTMLElement) {
     super(container);
-    this._title = container.querySelector(".card__title");
-    this._price = container.querySelector(".card__price");
-    this._category = container.querySelector(".card__category");
-    this._image = container.querySelector(".card__image");
+    this._title = container.querySelector(".card__title") as HTMLElement;
+    this._price = container.querySelector(".card__price") as HTMLElement;
+    this._category = container.querySelector(".card__category") as HTMLElement;
+    this._image = container.querySelector(".card__image") as HTMLImageElement;
   }
 
   set title(value: string) {
@@ -31,7 +31,7 @@ export class Card extends Component<IProduct> {
       this._category.textContent = value;
       // Сбрасываем все классы категорий и ставим нужный
       Object.values(categoryMap).forEach((cls) => {
-        this._category.classList.remove(cls);
+        (this._category as HTMLElement).classList.remove(cls);
       });
       const categoryClass = categoryMap[value];
       if (categoryClass) {
@@ -61,7 +61,7 @@ export class CardPreview extends Card {
   protected _button: HTMLButtonElement;
   protected _text: HTMLElement;
 
-  constructor(container: HTMLElement, private events: IEvents) {
+  constructor(container: HTMLElement, private events: any) {
     super(container);
     this._button = container.querySelector(".card__button");
     this._text = container.querySelector(".card__text");
