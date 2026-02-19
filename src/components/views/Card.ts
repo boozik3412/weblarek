@@ -1,6 +1,7 @@
 import { Component } from "../base/Component";
 import { IProduct } from "../../types";
 import { categoryMap } from "../../utils/constants";
+import { IEvents } from '../base/Events';
 
 // Базовый класс карточки
 export class Card extends Component<IProduct> {
@@ -60,7 +61,7 @@ export class CardPreview extends Card {
   protected _button: HTMLButtonElement;
   protected _text: HTMLElement;
 
-  constructor(container: HTMLElement, private events: any) {
+  constructor(container: HTMLElement, private events: IEvents) {
     super(container);
     this._button = container.querySelector(".card__button");
     this._text = container.querySelector(".card__text");
