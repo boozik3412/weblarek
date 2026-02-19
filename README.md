@@ -136,10 +136,11 @@ yarn build
 - `_items: IProduct[] = []` - массив всех товаров.
 
 **Методы класса:**
-
-- `setItems(items: IProduct[]): void` - устанавливает массив товаров.
-- `getItems(): IProduct[]` - возвращает текущие товары.
-- `getItem(id: string): IProduct | undefined` - находит товар по ID.
+- `setItems(items: IProduct[]): void` — устанавливает массив товаров.
+- `getItems(): IProduct[]` — возвращает текущие товары.
+- `getItem(id: string): IProduct | undefined` — находит товар по ID.
+- `setPreview(product: IProduct): void` — устанавливает товар для превью и эмитирует событие `preview:changed`.
+- `getPreview(): IProduct | null` — возвращает текущий товар превью.
 
 ### Класс Basket
 
