@@ -2,8 +2,8 @@ import { Component } from "../base/Component";
 import { IProduct } from "../../types";
 import { categoryMap } from "../../utils/constants";
 
-// Базовый класс карточки
-export class Card extends Component<IProduct> {
+// Базовый класс карточки — дженерик с дефолтным типом IProduct
+export class Card<T extends object = IProduct> extends Component<T> {
   protected _title: HTMLElement;
   protected _price: HTMLElement;
   protected _category?: HTMLElement;
