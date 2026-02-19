@@ -210,8 +210,19 @@ events.on("contacts:submit", () => {
     const items = basketModel.getItems();
     orderModel.items = items.map((p) => p.id);
     orderModel.total = basketModel.getTotal();
+
+    // Формируем payload: paymentMethod → payment (требование API)
+    const payload = {
+        payment: orderModel.paymentMethod,
+        email: orderModel.email,
+        phone: orderModel.phone,
+        address: orderModel.address,
+        items: orderModel.items,
+        total: orderModel.total,
+    };
+
     api
-        .postOrder(orderModel)
+        .postOrder(payload as any)
         .then((result) => {
             const total = result.total ?? orderModel.total;
             modal.render({
