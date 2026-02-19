@@ -31,7 +31,9 @@ const orderModel = new Order(events);
 const page = new Page(document.body, events);
 
 // ---- View: модальное окно ----
-const modalContainer = document.getElementById("modal-container") as HTMLElement;
+const modalContainer = document.getElementById(
+  "modal-container"
+) as HTMLElement;
 const modal = new Modal(modalContainer, events);
 
 // ---- View: корзина (из шаблона) ----
@@ -49,14 +51,18 @@ const orderFormEl = orderTemplate.content
 const orderForm = new OrderForm(orderFormEl, events);
 
 // ---- View: форма контактов шаг 2 (из шаблона) ----
-const contactsTemplate = document.getElementById("contacts") as HTMLTemplateElement;
+const contactsTemplate = document.getElementById(
+  "contacts"
+) as HTMLTemplateElement;
 const contactsFormEl = contactsTemplate.content
   .querySelector(".form")!
   .cloneNode(true) as HTMLFormElement;
 const contactsForm = new ContactsForm(contactsFormEl, events);
 
 // ---- View: экран успеха (из шаблона) ----
-const successTemplate = document.getElementById("success") as HTMLTemplateElement;
+const successTemplate = document.getElementById(
+  "success"
+) as HTMLTemplateElement;
 const successEl = successTemplate.content
   .querySelector(".order-success")!
   .cloneNode(true) as HTMLElement;
@@ -68,7 +74,9 @@ const successView = new Success(successEl, events);
 
 // Каталог загружен — рендерим карточки на странице
 events.on("catalog:changed", ({ items }: { items: IProduct[] }) => {
-  const cardTemplate = document.getElementById("card-catalog") as HTMLTemplateElement;
+  const cardTemplate = document.getElementById(
+    "card-catalog"
+  ) as HTMLTemplateElement;
   const cards = items.map((product) => {
     const cardEl = cardTemplate.content
       .querySelector(".card")!
@@ -93,7 +101,9 @@ events.on("card:select", ({ product }: { product: IProduct }) => {
 
 // Превью изменилось — открыть модалку с карточкой превью
 events.on("preview:changed", ({ product }: { product: IProduct }) => {
-  const previewTemplate = document.getElementById("card-preview") as HTMLTemplateElement;
+  const previewTemplate = document.getElementById(
+    "card-preview"
+  ) as HTMLTemplateElement;
   const previewEl = previewTemplate.content
     .querySelector(".card")!
     .cloneNode(true) as HTMLElement;
@@ -127,7 +137,9 @@ events.on("basket:changed", ({ items }: { items: IProduct[] }) => {
 
 // Открыть корзину
 events.on("basket:open", () => {
-  const cardTemplate = document.getElementById("card-basket") as HTMLTemplateElement;
+  const cardTemplate = document.getElementById(
+    "card-basket"
+  ) as HTMLTemplateElement;
   const basketItems = basketModel.getItems().map((product, index) => {
     const cardEl = cardTemplate.content
       .querySelector(".card")!
@@ -186,7 +198,12 @@ events.on(
 
 // Сабмит формы заказа — переход ко второй форме
 events.on("order:submit", () => {
-  contactsForm.render({ valid: false, errors: "" });
+  const errors = orderModel.validate();
+  const isValid = !errors.email && !errors.phone;
+  contactsForm.render({
+    valid: isValid,
+    errors: Object.values(errors).filter(Boolean)[0] ?? "",
+  });
   modal.render({ content: contactsForm.container });
 });
 
