@@ -220,24 +220,12 @@ yarn build
 
 Это тип данных заказа. Мает:
 
-- `id?: string` - ID заказа (опционально)
-- `buyer: string` - имя покупателя
+- `payment?: TPayment` - способ оплаты (наследуется из IBuyer)
+- `email: string` - электронная почта
 - `phone: string` - телефон
-- `address: string` - адрес
-- `email: string` - эмейл
-- `paymentMethod: 'card' | 'cash'` - способ оплаты
-- `items: string[]` - аррей ID товаров
-- `total: number` - вся сумма
-
-### IOrderForm
-
-Это тип для данных формы (все поля опциональные):
-
-- `buyer?: string`
-- `phone?: string`
-- `address?: string`
-- `email?: string`
-- `payment?: 'card' | 'cash'`
+- `address: string` - адрес доставки
+- `items: string[]` - массив ID товаров
+- `total: number` - сумма заказа
 
 ### IOrderResponse
 
