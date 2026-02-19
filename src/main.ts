@@ -9,7 +9,7 @@ import { Order } from "./components/models/Order";
 
 import { Page } from "./components/views/Page";
 import { Modal } from "./components/views/Modal";
-import { CardCatalog, CardPreview, CardBasket } from "./components/views/Card";
+import { CardCatalog, CardPreview, CardBasket, ICardBasket } from "./components/views/Card";
 import { BasketView } from "./components/views/BasketView";
 import { OrderForm, ContactsForm } from "./components/views/Form";
 import { Success } from "./components/views/Success";
@@ -31,40 +31,34 @@ const orderModel = new Order(events);
 const page = new Page(document.body, events);
 
 // ---- View: модальное окно ----
-const modalContainer = document.getElementById(
-  "modal-container"
-) as HTMLElement;
+const modalContainer = document.getElementById("modal-container") as HTMLElement;
 const modal = new Modal(modalContainer, events);
 
 // ---- View: корзина (из шаблона) ----
 const basketTemplate = document.getElementById("basket") as HTMLTemplateElement;
 const basketEl = basketTemplate.content
-  .querySelector(".basket")
+  .querySelector(".basket")!
   .cloneNode(true) as HTMLElement;
 const basketView = new BasketView(basketEl, events);
 
 // ---- View: форма заказа шаг 1 (из шаблона) ----
 const orderTemplate = document.getElementById("order") as HTMLTemplateElement;
 const orderFormEl = orderTemplate.content
-  .querySelector(".form")
+  .querySelector(".form")!
   .cloneNode(true) as HTMLFormElement;
 const orderForm = new OrderForm(orderFormEl, events);
 
 // ---- View: форма контактов шаг 2 (из шаблона) ----
-const contactsTemplate = document.getElementById(
-  "contacts"
-) as HTMLTemplateElement;
+const contactsTemplate = document.getElementById("contacts") as HTMLTemplateElement;
 const contactsFormEl = contactsTemplate.content
-  .querySelector(".form")
+  .querySelector(".form")!
   .cloneNode(true) as HTMLFormElement;
 const contactsForm = new ContactsForm(contactsFormEl, events);
 
 // ---- View: экран успеха (из шаблона) ----
-const successTemplate = document.getElementById(
-  "success"
-) as HTMLTemplateElement;
+const successTemplate = document.getElementById("success") as HTMLTemplateElement;
 const successEl = successTemplate.content
-  .querySelector(".order-success")
+  .querySelector(".order-success")!
   .cloneNode(true) as HTMLElement;
 const successView = new Success(successEl, events);
 
@@ -74,12 +68,10 @@ const successView = new Success(successEl, events);
 
 // Каталог загружен — рендерим карточки на странице
 events.on("catalog:changed", ({ items }: { items: IProduct[] }) => {
-  const cardTemplate = document.getElementById(
-    "card-catalog"
-  ) as HTMLTemplateElement;
+  const cardTemplate = document.getElementById("card-catalog") as HTMLTemplateElement;
   const cards = items.map((product) => {
     const cardEl = cardTemplate.content
-      .querySelector(".card")
+      .querySelector(".card")!
       .cloneNode(true) as HTMLElement;
     const card = new CardCatalog(cardEl, () => {
       events.emit("card:select", { product });
@@ -101,17 +93,13 @@ events.on("card:select", ({ product }: { product: IProduct }) => {
 
 // Превью изменилось — открыть модалку с карточкой превью
 events.on("preview:changed", ({ product }: { product: IProduct }) => {
-  const previewTemplate = document.getElementById(
-    "card-preview"
-  ) as HTMLTemplateElement;
+  const previewTemplate = document.getElementById("card-preview") as HTMLTemplateElement;
   const previewEl = previewTemplate.content
-    .querySelector(".card")
+    .querySelector(".card")!
     .cloneNode(true) as HTMLElement;
-  const card = new CardPreview(previewEl, events);
-
+  const card = new CardPreview(previewEl);
   const inBasket = basketModel.hasItem(product.id);
   const hasPrice = product.price !== null;
-
   card.setButtonState(inBasket, hasPrice);
   card.setOnButtonClick(() => {
     if (basketModel.hasItem(product.id)) {
@@ -121,7 +109,6 @@ events.on("preview:changed", ({ product }: { product: IProduct }) => {
     }
     modal.close();
   });
-
   modal.render({
     content: card.render({
       title: product.title,
@@ -140,12 +127,10 @@ events.on("basket:changed", ({ items }: { items: IProduct[] }) => {
 
 // Открыть корзину
 events.on("basket:open", () => {
-  const cardTemplate = document.getElementById(
-    "card-basket"
-  ) as HTMLTemplateElement;
+  const cardTemplate = document.getElementById("card-basket") as HTMLTemplateElement;
   const basketItems = basketModel.getItems().map((product, index) => {
     const cardEl = cardTemplate.content
-      .querySelector(".card")
+      .querySelector(".card")!
       .cloneNode(true) as HTMLElement;
     const card = new CardBasket(cardEl, () => {
       basketModel.removeItem(product.id);
@@ -155,9 +140,8 @@ events.on("basket:open", () => {
       title: product.title,
       price: product.price,
       index: index + 1,
-    });
+    } as ICardBasket);
   });
-
   modal.render({
     content: basketView.render({
       items: basketItems,
@@ -191,7 +175,6 @@ events.on(
     } else {
       orderModel.setField(field, value);
     }
-
     const errors = orderModel.validate();
     const isValid = !errors.address && !errors.paymentMethod;
     orderForm.render({
@@ -226,7 +209,6 @@ events.on("contacts:submit", () => {
   const items = basketModel.getItems();
   orderModel.items = items.map((p) => p.id);
   orderModel.total = basketModel.getTotal();
-
   api
     .postOrder(orderModel)
     .then((result) => {
