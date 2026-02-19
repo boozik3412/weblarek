@@ -16,10 +16,10 @@ export class Page extends Component<IPage> {
   constructor(container: HTMLElement, private events: IEvents) {
     super(container);
 
-    this._catalog = container.querySelector(".gallery");
-    this._counter = container.querySelector(".header__basket-counter");
-    this._basketButton = container.querySelector(".header__basket");
-    this._wrapper = container.querySelector(".page__wrapper");
+    this._catalog = container.querySelector(".gallery") as HTMLElement;
+    this._counter = container.querySelector(".header__basket-counter") as HTMLElement;
+    this._basketButton = container.querySelector(".header__basket") as HTMLElement;
+    this._wrapper = container.querySelector(".page__wrapper") as HTMLElement;
 
     this._basketButton.addEventListener("click", () => {
       this.events.emit("basket:open");

@@ -1,7 +1,6 @@
 import { Component } from "../base/Component";
 import { IProduct } from "../../types";
 import { categoryMap } from "../../utils/constants";
-import { IEvents } from '../base/Events';
 
 // Базовый класс карточки
 export class Card extends Component<IProduct> {
@@ -29,7 +28,6 @@ export class Card extends Component<IProduct> {
   set category(value: string) {
     if (this._category) {
       this._category.textContent = value;
-      // Сбрасываем все классы категорий и ставим нужный
       Object.values(categoryMap).forEach((cls) => {
         (this._category as HTMLElement).classList.remove(cls);
       });
@@ -57,14 +55,18 @@ export class CardCatalog extends Card {
 }
 
 // Карточка для превью (полная карточка с кнопкой)
-export class CardPreview extends Card {
+export interface ICardPreview extends IProduct {
+  description: string;
+}
+
+export class CardPreview extends Card<ICardPreview> {
   protected _button: HTMLButtonElement;
   protected _text: HTMLElement;
 
-  constructor(container: HTMLElement, private events: any) {
+  constructor(container: HTMLElement) {
     super(container);
-    this._button = container.querySelector(".card__button");
-    this._text = container.querySelector(".card__text");
+    this._button = container.querySelector(".card__button") as HTMLButtonElement;
+    this._text = container.querySelector(".card__text") as HTMLElement;
   }
 
   set description(value: string) {
@@ -92,14 +94,20 @@ export class CardPreview extends Card {
 }
 
 // Карточка для корзины (компактная, со счётчиком)
-export class CardBasket extends Card {
+export interface ICardBasket {
+  title: string;
+  price: number | null;
+  index: number;
+}
+
+export class CardBasket extends Card<ICardBasket> {
   protected _index: HTMLElement;
   protected _deleteButton: HTMLButtonElement;
 
   constructor(container: HTMLElement, onDelete: () => void) {
     super(container);
-    this._index = container.querySelector(".basket__item-index");
-    this._deleteButton = container.querySelector(".basket__item-delete");
+    this._index = container.querySelector(".basket__item-index") as HTMLElement;
+    this._deleteButton = container.querySelector(".basket__item-delete") as HTMLButtonElement;
     this._deleteButton.addEventListener("click", onDelete);
   }
 
