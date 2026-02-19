@@ -18,19 +18,18 @@ export interface IProduct {
 }
 
 export interface IBuyer {
-  payment?: TPayment;    // ← ИСПРАВЛЕНО: опционально
+  payment?: TPayment;
   email: string;
   phone: string;
   address: string;
 }
 
 export interface IOrder extends IBuyer {
-  id?: string;           // ← ДОБАВЛЕНО: ID заказа
   items: string[];
   total: number;
 }
 
-export interface IOrderResponse {  // ← ПЕРЕИМЕНОВАНО (было IOrderResult)
+export interface IOrderResponse {
   id: string;
   total: number;
 }
@@ -40,7 +39,7 @@ export interface IProductsResponse {
   total: number;
 }
 
-// ← ДОБАВЛЕНО: для валидации форм
+// ДОБАВЛЕНО: для валидации форм
 export interface IFormErrors {
   [key: string]: string;
 }

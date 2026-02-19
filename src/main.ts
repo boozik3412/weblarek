@@ -201,10 +201,7 @@ events.on('contacts:submit', () => {
                 content: successView.render({ total }),
             });
             basketModel.clear();
-            orderModel.paymentMethod = '';
-            orderModel.address = '';
-            orderModel.email = '';
-            orderModel.phone = '';
+            orderModel.clear();
         })
         .catch(console.error);
 });

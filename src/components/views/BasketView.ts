@@ -16,12 +16,13 @@ export class BasketView extends Component<IBasketView> {
 
     this._list = container.querySelector(".basket__list");
     this._total = container.querySelector(".basket__price");
-    this._button = container.querySelector(".basket__button");
-
-    this._button.addEventListener("click", () => {
-      this.events.emit("order:start");
-    });
-  }
+    this._button = container.querySelector('.basket__button') as HTMLButtonElement;
+    if (this._button) {
+      this._button.addEventListener('click', () => {
+        this.events.emit('order:start');
+      });
+    }
+    
 
   set items(items: HTMLElement[]) {
     if (items.length === 0) {
