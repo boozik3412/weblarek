@@ -28,4 +28,8 @@ export class Products {
     getPreview(): IProduct | null {
         return this._preview;
     }
+
+    getSelectedProduct(): IProduct | null {
+        return this._preview;
+    }
 }

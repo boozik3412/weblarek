@@ -27,13 +27,8 @@ export class BasketView extends Component<IBasketView> {
   }
 
   set items(items: HTMLElement[]) {
-    if (items.length === 0) {
-      this._list.innerHTML = '<p class="basket__empty">Корзина пуста</p>';
-      this._button.disabled = true;
-    } else {
-      this._list.replaceChildren(...items);
-      this._button.disabled = false;
-    }
+    this._list.replaceChildren(...items);
+    this._button.disabled = items.length === 0;
   }
 
   set total(value: number) {

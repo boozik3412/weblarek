@@ -141,6 +141,7 @@ yarn build
 - `getItem(id: string): IProduct | undefined` — находит товар по ID.
 - `setPreview(product: IProduct): void` — устанавливает товар для превью и эмитирует событие `preview:changed`.
 - `getPreview(): IProduct | null` — возвращает текущий товар превью.
+- `getSelectedProduct(): IProduct | null` — возвращает текущий товар превью (алиас для getPreview).
 
 ### Класс Basket
 
@@ -166,28 +167,29 @@ yarn build
 
 ### Класс Order
 
-Управляет данными заказа и валидацией информации о покупателе.
+Управляет данными покупателя из форм (адрес, способ оплаты, телефон, email) и валидацией. Список товаров и сумма хранятся в модели Basket. Объект заказа для отправки на сервер собирается в обработчике из двух моделей.
 
 **Конструктор:**
 
 - 'constructor(events: IEvents)' — принимает экземпляр брокера событий.
 
-**Поля класса:**
+**Поля класса (приватные):**
 
-- `paymentMethod: TPayment | '' = ''` - способ оплаты.
-- `address: string = ''` - адрес доставки.
-- `phone: string = ''` - телефон покупателя.
-- `email: string = ''` - электронная почта.
-- `items: string[] = []` - массив ID товаров.
-- `total: number = 0` - сумма заказа.
+- `_paymentMethod: TPayment | ''` - способ оплаты.
+- `_address: string` - адрес доставки.
+- `_phone: string` - телефон покупателя.
+- `_email: string` - электронная почта.
 
 **Методы класса:**
 
-- `setPayment(method: TPayment): void` - устанавливает способ оплаты.
+- `setPayment(method: TPayment): void` - устанавливает способ оплаты, эмитирует `order:changed`.
 - `getPayment(): TPayment | ''` - возвращает способ оплаты.
-- `setField(field: 'email' | 'phone' | 'address', value: string): void` - устанавливает поле покупателя.
+- `setField(field: 'email' | 'phone' | 'address', value: string): void` - устанавливает поле, эмитирует `order:changed`.
 - `validate(): Record<string, string>` - возвращает объект с ошибками валидации.
-- `clear(): void` - сбрасывает все поля заказа.
+- `clear(): void` - сбрасывает все поля, эмитирует `order:changed`.
+- `get address(): string` - возвращает адрес.
+- `get email(): string` - возвращает email.
+- `get phone(): string` - возвращает телефон.
 
 ## Взаимодействие с API
 
@@ -201,14 +203,14 @@ yarn build
 
 **Методы класса:**
 
-- `getProducts(): Promise<IProduct[]>` - гет товары со сервера.
+- `getProducts(): Promise<IProduct[]>` - получить товары с сервера.
 - `postOrder(order: IOrder): Promise<IOrderResponse>` - отправить заказ.
 
 ## Типы данных
 
 ### IProduct
 
-Это тип всех товаров. Мает следующие поля:
+Это тип всех товаров. Имеет следующие поля:
 
 - `id: string` - уникальный идентификатор товара
 - `description: string` - описание товара
@@ -219,7 +221,7 @@ yarn build
 
 ### IOrder
 
-Это тип данных заказа. Мает:
+Это тип данных заказа. Имеет:
 
 - `payment?: TPayment` - способ оплаты (наследуется из IBuyer)
 - `email: string` - электронная почта
@@ -260,17 +262,17 @@ yarn build
 
 ### Класс Card / CardCatalog / CardPreview / CardBasket
 
-Базовый класс карточки товара и его специализации:
+Базовый класс Card содержит только общие для всех карточек поля: title и price. Категория и изображение определены в дочерних классах.
 
-- `CardCatalog` — карточка в каталоге, с обработчиком клика
-- `CardPreview` — карточка в модальном окне с кнопкой действия
-- `CardBasket` — карточка в корзине с номером и кнопкой удаления
+- `CardCatalog` — карточка в каталоге, с category, image и обработчиком клика
+- `CardPreview` — карточка в модальном окне с category, image, description и кнопкой (эмитирует product:toggle)
+- `CardBasket` — карточка в корзине с index и кнопкой удаления
 
 ### Класс BasketView
 
-Компонент корзины. Отображает список товаров и итоговую сумму.
+Компонент корзины. Отображает список товаров и итоговую сумму. Сообщение «Корзина пуста» реализовано через CSS-псевдоэлемент.
 
-- `set items(items: HTMLElement[])` — рендерит список или сообщение о пустой корзине
+- `set items(items: HTMLElement[])` — рендерит список товаров
 - `set total(value: number)` — обновляет итоговую сумму
 
 ### Класс Form / OrderForm / ContactsForm
@@ -279,11 +281,38 @@ yarn build
 
 - `set valid(value: boolean)` — активирует/деактивирует кнопку отправки
 - `set errors(value: string)` — отображает сообщение об ошибке
-- `OrderForm` — форма выбора оплаты и адреса (шаг 1)
-- `ContactsForm` — форма email и телефона (шаг 2)
+- `OrderForm` — форма выбора оплаты и адреса (шаг 1): `set address`, `set payment`
+- `ContactsForm` — форма email и телефона (шаг 2): `set email`, `set phone`
 
 ### Класс Success
 
 Экран успешного завершения заказа.
 
 - `set total(value: number)` — отображает списанную сумму
+
+## События приложения
+
+События генерируются моделями и представлениями. Презентер только обрабатывает события, не генерирует их.
+
+### События моделей данных
+
+- `catalog:changed` (Products) — изменение каталога товаров. Данные: `{ items: IProduct[] }`
+- `preview:changed` (Products) — изменение выбранного для просмотра товара. Данные: `{ product: IProduct }`
+- `basket:changed` (Basket) — изменение содержимого корзины. Данные: `{ items: IProduct[] }`
+- `order:changed` (Order) — изменение данных покупателя
+
+### События представлений
+
+- `card:select` (CardCatalog) — выбор карточки для просмотра. Данные: `IProduct`
+- `product:toggle` (CardPreview) — нажатие кнопки покупки/удаления товара
+- `basket:open` (Page) — нажатие кнопки открытия корзины
+- `order:start` (BasketView) — нажатие кнопки оформления заказа
+- `order:change` (OrderForm) — изменение данных в форме заказа (шаг 1). Данные: `{ field, value }`
+- `order:submit` (OrderForm) — нажатие кнопки перехода ко второй форме
+- `contacts:change` (ContactsForm) — изменение данных в форме контактов (шаг 2). Данные: `{ field, value }`
+- `contacts:submit` (ContactsForm) — нажатие кнопки оплаты
+- `modal:open` (Modal) — открытие модального окна
+- `modal:close` (Modal) — закрытие модального окна
+- `success:close` (Success) — закрытие экрана успешного заказа
+
+Удаление товара из корзины выполняется через обработчик, переданный в CardBasket при создании — он вызывает `basketModel.removeItem()`, модель эмитирует `basket:changed`.

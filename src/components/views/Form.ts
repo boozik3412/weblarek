@@ -43,25 +43,33 @@ export class Form extends Component<IFormState> {
 export class OrderForm extends Form {
   protected _cardButton: HTMLButtonElement;
   protected _cashButton: HTMLButtonElement;
+  protected _addressInput: HTMLInputElement;
 
   constructor(container: HTMLFormElement, events: IEvents) {
     super(container, events);
 
     this._cardButton = container.querySelector('[name=card]') as HTMLButtonElement;
     this._cashButton = container.querySelector('[name=cash]') as HTMLButtonElement;
+    this._addressInput = container.querySelector('[name=address]') as HTMLInputElement;
 
     this._cardButton.addEventListener('click', () => {
       this.events.emit('order:change', { field: 'paymentMethod', value: 'card' });
-      this.setPayment('card');
     });
 
     this._cashButton.addEventListener('click', () => {
       this.events.emit('order:change', { field: 'paymentMethod', value: 'cash' });
-      this.setPayment('cash');
     });
   }
 
-  setPayment(method: 'card' | 'cash'): void {
+  set address(value: string) {
+    if (this._addressInput) this._addressInput.value = value;
+  }
+
+  set payment(value: 'card' | 'cash' | '') {
+    this.setPayment(value);
+  }
+
+  setPayment(method: 'card' | 'cash' | ''): void {
     this._cardButton.classList.toggle('button_alt-active', method === 'card');
     this._cashButton.classList.toggle('button_alt-active', method === 'cash');
   }
@@ -69,7 +77,20 @@ export class OrderForm extends Form {
 
 // Форма второго шага: email + телефон
 export class ContactsForm extends Form {
+  protected _emailInput: HTMLInputElement;
+  protected _phoneInput: HTMLInputElement;
+
   constructor(container: HTMLFormElement, events: IEvents) {
     super(container, events);
+    this._emailInput = container.querySelector('[name=email]') as HTMLInputElement;
+    this._phoneInput = container.querySelector('[name=phone]') as HTMLInputElement;
+  }
+
+  set email(value: string) {
+    if (this._emailInput) this._emailInput.value = value;
+  }
+
+  set phone(value: string) {
+    if (this._phoneInput) this._phoneInput.value = value;
   }
 }
